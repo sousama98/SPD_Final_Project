@@ -1,0 +1,134 @@
+/* General styles */
+body {
+    background-color:#fffcec ; /* Background color */
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+
+/* Container for the login page */
+.login-container {
+    display: flex;
+    width: 80%; /* Adjust as needed */
+    height: 70vh; /* Adjust as needed */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Left half with the image */
+.login-image {
+    flex: 1;
+    background-image: url('../images/login-image.jpg'); /* Replace with your image path */
+    background-size: cover;
+    background-position: center;
+}
+
+/* Right half with the form */
+.login-form {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #384B70; /* Background color for form side */
+    padding: 20px;
+}
+
+.form-container {
+    width: 100%;
+    max-width: 400px;
+    color: #FCFAEE; /* Text color */
+}
+
+.form-container h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #FCFAEE; /* Title color */
+}
+
+.form-control {
+    background-color: #507687; /* Input field background */
+    border: none;
+    color: #FCFAEE; /* Input text color */
+}
+
+.form-control::placeholder {
+    color: #FCFAEE; /* Placeholder text color */
+}
+
+.btn-custom {
+    background-color: #B8001F; /* Button color */
+    color: #FCFAEE;
+    border: none;
+    width: 100%;
+}
+
+.btn-custom:hover {
+    background-color: darkred; /* Hover state */
+}
+.navbar {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    padding: 1rem 1.5rem;
+    
+}
+
+.navbar .navbar-brand {
+    font-weight: bold;
+    font-size: 1.25rem;
+    color: #FCFAEE; /* Customize brand color */
+}
+
+/* Nav Item Hover and Active State */
+.navbar-nav .nav-item .nav-link {
+    color: #FCFAEE !important; /* Default color for links */
+    padding: 8px 15px;
+    transition: color 0.3s ease, background-color 0.3s ease;
+   
+}
+
+
+
+.navbar .navbar-nav .nav-link:hover,
+.navbar .navbar-nav .nav-link.active {
+    color: #FCFAEE !important; /* Keep white on hover and active states */
+    background-color: #507687; /* Optional: background color on hover/active */
+    border-radius: 4px;
+}
+
+
+/* Navbar Right Section for Icons */
+.d-flex.align-items-center a.nav-link {
+    padding: 0 10px;
+}
+
+
+.d-flex.align-items-center i {
+    font-size: 1.2rem;
+    color: #FCFAEE;
+    transition: color 0.3s;
+}
+
+.d-flex.align-items-center a.nav-link:hover i {
+    color: #B8001F; /* Change icon color on hover */
+}
+.buttonUs{
+    font-size: medium;
+    background: #b8001f;
+    color: white;
+    font-weight: 500;
+    border-radius: 5px;
+    padding: 6px 6px;
+    border:none;
+    text-decoration: none;
+}
+.tdSize{
+    font-size:16px;
+}
+.form-ter {
+    background-color: white;
+    border: 1px solid lightgray;
+    color: #666666;
+    border-radius: 4px;
+    padding: 5px 5px;
+    margin-left: 4%;
+    width: 70%;
+}

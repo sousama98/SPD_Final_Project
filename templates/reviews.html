@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Reviews{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Reviews</h2>
+    <table class="table mt-3">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">Comment</th>
+                <th scope="col">Timestamp</th>
+                <th scope="col">Rating</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for review in reviews %}
+            <tr>
+                <td style="padding: 1%;">{{ review['comment'] }}</td>
+                <td style="padding: 1%;">{{ review['timestamp'] }}</td>
+                <td style="padding: 1%;">{{ review['rating'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
