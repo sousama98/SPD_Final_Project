@@ -54,3 +54,33 @@ document.addEventListener('DOMContentLoaded', function () {
             communityFields.style.display = 'none';
         }
     }
+
+      // Open the review modal and populate data
+      function openReviewModal(type, id, title) {
+        document.getElementById('itemType').value = type;
+        document.getElementById('itemId').value = id;
+        document.getElementById('itemTitle').textContent = `Review for: ${title}`;
+        
+        // Reset the form fields and star rating
+        document.getElementById('reviewForm').reset();
+        document.querySelectorAll('.star').forEach(star => star.className = 'fa fa-star-o star');
+
+        // Show the modal
+        const modal = new bootstrap.Modal(document.getElementById('reviewModal'));
+        modal.show();
+    }
+
+    // Set star rating
+    function setRating(star) {
+        const value = star.getAttribute('data-value');
+        document.getElementById('rating').value = value;
+        
+        // Highlight stars up to the selected value
+        document.querySelectorAll('.star').forEach(star => {
+            if (star.getAttribute('data-value') <= value) {
+                star.className = 'fa fa-star star';
+            } else {
+                star.className = 'fa fa-star-o star';
+            }
+        });
+    }

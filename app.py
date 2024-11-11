@@ -140,13 +140,31 @@ def customer_dashboard():
     '''
     top_community_events = conn.execute(top_community_events_query, (user_id,)).fetchall()
 
+    # Reserved Resources
+    reserved_resources_query = '''
+    SELECT title, description, category, date_posted
+    FROM Resources
+    WHERE user_id = ? AND availability = 'Reserved';
+    '''
+    reserved_resources = conn.execute(reserved_resources_query, (user_id,)).fetchall()
+
+    # Reserved Communities
+    reserved_communities_query = '''
+    SELECT title, description, location, date_posted
+    FROM Community
+    WHERE user_id = ? AND availability = 'Reserved';
+    '''
+    reserved_communities = conn.execute(reserved_communities_query, (user_id,)).fetchall()
+
     conn.close()
 
     return render_template(
         'customer_dashboard.html',
         user_name=user_name,
         top_resources=top_resources,
-        top_community_events=top_community_events
+        top_community_events=top_community_events,
+        reserved_resources=reserved_resources,
+        reserved_communities=reserved_communities
     )
 
 
@@ -158,23 +176,6 @@ def user_management():
     conn.close()
     return render_template('user_management.html', users=users)
 
-@app.route('/reviews')
-@login_required
-def reviews():
-    # Connect to the database
-    conn = get_db_connection()
-    
-    # Query to select reviewer_id, comment, timestamp, and rating from Reviews table
-    reviews_data = conn.execute('''
-        SELECT reviewer_id, comment, timestamp, rating
-        FROM Reviews
-    ''').fetchall()
-    
-    # Close the database connection
-    conn.close()
-    
-    # Render the reviews page with the reviews data
-    return render_template('reviews.html', reviews=reviews_data)
 
 
 @app.route('/products_listed')
@@ -263,8 +264,30 @@ def community_events():
 @app.route('/notifications')
 @login_required
 def notifications():
-    # Logic to display notifications
-    return render_template('notifications.html')
+    conn = get_db_connection()
+    user_id = session['user_id']  # Current user ID
+
+    # Fetch notifications for the current user
+    notifications_query = '''
+    SELECT notification_id, content, is_read, timestamp
+    FROM Notifications
+    WHERE user_id = ?
+    ORDER BY timestamp DESC;
+    '''
+    notifications = conn.execute(notifications_query, (user_id,)).fetchall()
+
+    # Mark notifications as read
+    mark_as_read_query = '''
+    UPDATE Notifications
+    SET is_read = 1
+    WHERE user_id = ?;
+    '''
+    conn.execute(mark_as_read_query, (user_id,))
+    conn.commit()
+    conn.close()
+
+    return render_template('notifications.html', notifications=notifications)
+
 
 @app.route('/profile')
 @login_required
@@ -400,7 +423,7 @@ def reserve_resource(resource_id):
             '''
             conn.execute(reserve_query, (resource_id,))
 
-            # Optional: Add a notification for the owner of the product
+            # Notify the owner
             notification_content = f"Your resource '{resource['title']}' has been reserved."
             notification_query = '''
             INSERT INTO Notifications (user_id, content)
@@ -600,6 +623,13 @@ def list_item():
             VALUES (?, ?, ?, ?, ?, 'Available', CURRENT_TIMESTAMP);
             '''
             conn.execute(resource_query, (user_id, title, description, image_filename, category))
+            # Notify the user
+            notification_content = f"Your resource '{title}' has been listed successfully."
+            notification_query = '''
+            INSERT INTO Notifications (user_id, content)
+            VALUES (?, ?);
+            '''
+            conn.execute(notification_query, (user_id, notification_content))
 
         elif listing_type == 'community':
             # Community fields
@@ -621,7 +651,13 @@ def list_item():
             VALUES (?, ?, ?, ?, ?, 'Available', CURRENT_TIMESTAMP);
             '''
             conn.execute(community_query, (user_id, title, description, image_filename, location))
-
+            # Notify the user
+            notification_content = f"Your community '{title}' has been listed successfully."
+            notification_query = '''
+            INSERT INTO Notifications (user_id, content)
+            VALUES (?, ?);
+            '''
+            conn.execute(notification_query, (user_id, notification_content))
         conn.commit()
         conn.close()
 
@@ -631,8 +667,94 @@ def list_item():
     return render_template('list_item.html')
 
 
+@app.route('/submit_review', methods=['POST'])
+@login_required
+def submit_review():
+    item_type = request.form['item_type']
+    item_id = request.form['item_id']
+    rating = request.form['rating']
+    review_text = request.form['review_text']
+    user_id = session['user_id']
+
+    conn = get_db_connection()
+
+    if item_type == 'resource':
+        review_query = '''
+        INSERT INTO Reviews (user_id, reviewer_id, rating, comment, timestamp)
+        VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP);
+        '''
+        conn.execute(review_query, (item_id, user_id, rating, review_text))
+
+    elif item_type == 'community':
+        review_query = '''
+        INSERT INTO Reviews (user_id, reviewer_id, rating, comment, timestamp)
+        VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP);
+        '''
+        conn.execute(review_query, (item_id, user_id, rating, review_text))
+
+    conn.commit()
+    conn.close()
+
+    flash("Review submitted successfully!", "success")
+    return redirect(url_for('reviews'))
+
+
+
+
+@app.route('/reviews')
+@login_required
+def reviews():
+    conn = get_db_connection()
+    user_id = session['user_id']
+
+    # Fetch reserved resources
+    reserved_resources_query = '''
+    SELECT resource_id, title, description, category, date_posted
+    FROM Resources
+    WHERE user_id = ? AND availability = 'Reserved';
+    '''
+    reserved_resources = conn.execute(reserved_resources_query, (user_id,)).fetchall()
+
+    # Fetch reserved communities
+    reserved_communities_query = '''
+    SELECT community_id, title, description, location, date_posted
+    FROM Community
+    WHERE user_id = ? AND availability = 'Reserved';
+    '''
+    reserved_communities = conn.execute(reserved_communities_query, (user_id,)).fetchall()
+
+    conn.close()
+
+    return render_template(
+        'reviews.html',
+        reserved_resources=reserved_resources,
+        reserved_communities=reserved_communities
+    )
+
+
+@app.route('/reviews_list')
+@login_required
+def reviews_list():
+    conn = get_db_connection()
+    query = '''
+    SELECT 
+        r.rating,
+        r.comment,
+        r.timestamp,
+        u.name AS reviewer_name,
+        res.title AS resource_title,
+        com.title AS community_title
+    FROM Reviews r
+    LEFT JOIN Users u ON r.reviewer_id = u.user_id
+    LEFT JOIN Resources res ON r.user_id = res.resource_id
+    LEFT JOIN Community com ON r.user_id = com.community_id
+    ORDER BY r.timestamp DESC;
+    '''
+    reviews = conn.execute(query).fetchall()
+    conn.close()
+
+    return render_template('reviews_list.html', Reviews=reviews)
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
+    
