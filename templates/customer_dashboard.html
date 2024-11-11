@@ -4,46 +4,106 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h2 class="text-center mb-4">Customer Dashboard</h2>
+    <h2 class="text-center mb-4">Welcome, {{ user_name }}</h2>
 
     <div class="row">
-        <!-- Top Community Events -->
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    Top Community Events
-                </div>
-                <div class="card-body">
-                    <ul class="list-group list-group-flush">
-                        {% for event in top_community_events %}
-                        <li class="list-group-item">
-                            <h5>{{ event['title'] }}</h5>
-                            <p>{{ event['description'] }}</p>
-                            <p><strong>Location:</strong> {{ event['location'] }}</p>
-                            <small class="text-muted">Date: {{ event['date_posted'] }}</small>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-        </div>
-
         <!-- Top Resources -->
-        <div class="col-md-4 mb-4">
+        <div class="col-md-6 mb-4">
             <div class="card">
-                <div class="card-header bg-success text-white">
-                    Top Resources
+                <div class="card-header buttonUs">
+                    Your Top Resources
                 </div>
                 <div class="card-body">
+                    {% if top_resources %}
                     <ul class="list-group list-group-flush">
                         {% for resource in top_resources %}
                         <li class="list-group-item">
                             <h5>{{ resource['title'] }}</h5>
                             <p>{{ resource['description'] }}</p>
-                            <small class="text-muted">Date: {{ resource['date_posted'] }}</small>
+                            <small class="text-muted">Posted on: {{ resource['date_posted'] }}</small>
                         </li>
                         {% endfor %}
                     </ul>
+                    {% else %}
+                    <p>No resources listed yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Communities -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header buttonUs">
+                    Your Top Community Events
+                </div>
+                <div class="card-body">
+                    {% if top_community_events %}
+                    <ul class="list-group list-group-flush">
+                        {% for community in top_community_events %}
+                        <li class="list-group-item">
+                            <h5>{{ community['title'] }}</h5>
+                            <p>{{ community['description'] }}</p>
+                            <small><strong>Location:</strong> {{ community['location'] }}</small><br>
+                            <small class="text-muted">Posted on: {{ community['date_posted'] }}</small>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p>No community events listed yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <!-- Reserved Resources -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header buttonUs">
+                    Reserved Resources
+                </div>
+                <div class="card-body">
+                    {% if reserved_resources %}
+                    <ul class="list-group list-group-flush">
+                        {% for resource in reserved_resources %}
+                        <li class="list-group-item">
+                            <h5>{{ resource['title'] }}</h5>
+                            <p>{{ resource['description'] }}</p>
+                            <small class="text-muted">Category: {{ resource['category'] }}</small><br>
+                            <small class="text-muted">Reserved on: {{ resource['date_posted'] }}</small>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p>No reserved resources yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Reserved Communities -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header buttonUs">
+                    Reserved Community Events
+                </div>
+                <div class="card-body">
+                    {% if reserved_communities %}
+                    <ul class="list-group list-group-flush">
+                        {% for community in reserved_communities %}
+                        <li class="list-group-item">
+                            <h5>{{ community['title'] }}</h5>
+                            <p>{{ community['description'] }}</p>
+                            <small><strong>Location:</strong> {{ community['location'] }}</small><br>
+                            <small class="text-muted">Reserved on: {{ community['date_posted'] }}</small>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p>No reserved community events yet.</p>
+                    {% endif %}
                 </div>
             </div>
         </div>

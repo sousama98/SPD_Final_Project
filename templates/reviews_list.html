@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Reviews{% endblock %}
+
+{% block content %}
+<div class="container mt-4" style="height:36vw">
+    <h2 class="text-center mb-4">User Reviews</h2>
+
+    {% if Reviews %}
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Reviewer Name</th>
+                <th>Review For</th>
+                <th>Comment</th>
+                <th>Rating</th>
+                <th>Reviewed On</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for review in Reviews %}
+            <tr>
+                <td>{{ review['reviewer_name'] }}</td>
+                <td>
+                    {% if review['resource_title'] %}
+                        Resource: "{{ review['resource_title'] }}"
+                    {% elif review['community_title'] %}
+                        Community: "{{ review['community_title'] }}"
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+                <td>{{ review['comment'] }}</td>
+                <td>{{ review['rating'] }} / 5</td>
+                <td>{{ review['timestamp'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="text-center">No reviews found.</p>
+    {% endif %}
+</div>
+{% endblock %}

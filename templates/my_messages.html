@@ -18,7 +18,7 @@
             <small class="text-muted">Received on: {{ message['timestamp'] }}</small>
 
             <!-- Reply Button -->
-            <button class="btn btn-primary btn-sm mt-2" data-bs-toggle="modal" data-bs-target="#replyModal{{ message['message_id'] }}">Reply</button>
+            <button class="buttonUs" style="margin-left: 2vw;"data-bs-toggle="modal" data-bs-target="#replyModal{{ message['message_id'] }}">Reply</button>
 
             <!-- Reply Modal -->
             <div class="modal fade" id="replyModal{{ message['message_id'] }}" tabindex="-1" aria-labelledby="replyModalLabel{{ message['message_id'] }}" aria-hidden="true">
@@ -36,7 +36,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Send Reply</button>
+                                <button type="submit" class="buttonUs">Send Reply</button>
                             </div>
                         </form>
                         
