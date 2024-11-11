@@ -1,9 +1,70 @@
-
 {% extends "base.html" %}
 
 {% block title %}Admin Dashboard{% endblock %}
 
 {% block content %}
-    <h2>Welcome to the Admin Dashboard</h2>
-    <p>Manage your operations efficiently from here.</p>
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Admin Dashboard</h2>
+
+    <div class="row">
+        <!-- Top Community Events -->
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    Top Community Events
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        {% for event in top_community_events %}
+                        <li class="list-group-item">
+                            <h5>{{ event['title'] }}</h5>
+                            <p>{{ event['description'] }}</p>
+                            <p><strong>Location:</strong> {{ event['location'] }}</p>
+                            <small class="text-muted">Date: {{ event['date_posted'] }}</small>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Resources -->
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    Top Resources
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        {% for resource in top_resources %}
+                        <li class="list-group-item">
+                            <h5>{{ resource['title'] }}</h5>
+                            <p>{{ resource['description'] }}</p>
+                            <small class="text-muted">Date: {{ resource['date_posted'] }}</small>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-header bg-warning text-white">
+                    Most Active Users
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        {% for user in most_active_users %}
+                        <li class="list-group-item">
+                            <h5>{{ user['name'] }}</h5>
+                            <p><strong>Email:</strong> {{ user['email'] }}</p>
+                            <small class="text-muted">Activity Count: {{ user['activity_count'] }}</small>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

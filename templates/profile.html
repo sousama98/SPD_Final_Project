@@ -1,0 +1,18 @@
+<!-- Notifications Section -->
+<div class="card mb-4">
+    <div class="card-header bg-info text-white">My Notifications</div>
+    <div class="card-body">
+        {% if notifications %}
+            <ul class="list-group list-group-flush">
+                {% for notification in notifications %}
+                <li class="list-group-item">
+                    <p>{{ notification['content'] }}</p>
+                    <small class="text-muted">Received on: {{ notification['timestamp'] }}</small>
+                </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>You have no notifications yet.</p>
+        {% endif %}
+    </div>
+</div>

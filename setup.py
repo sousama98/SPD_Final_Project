@@ -32,8 +32,20 @@ cursor.execute('''
         FOREIGN KEY (user_id) REFERENCES Users(user_id)
     )
 ''')
+cursor.execute('''
+CREATE TABLE IF NOT EXISTS Community (
+    community_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    title TEXT NOT NULL,
+    description TEXT,
+    images TEXT,
+    location TEXT,  -- Changed from category to location
+    availability TEXT,
+    date_posted TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+)
+''')
 
-# Create Messages table
 cursor.execute('''
     CREATE TABLE IF NOT EXISTS Messages (
         message_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -60,6 +72,17 @@ cursor.execute('''
     )
 ''')
 
+
+cursor.execute('''
+CREATE TABLE IF NOT EXISTS Notifications (
+    notification_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL, -- The user who will receive the notification
+    content TEXT NOT NULL, -- The notification message
+    is_read INTEGER DEFAULT 0, -- Flag to indicate if the notification is read
+    timestamp TEXT DEFAULT CURRENT_TIMESTAMP, -- When the notification was created
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
+''')
 # # Insert the records
 # cursor.execute('''
 #     INSERT INTO Users (name, email, password, role) 

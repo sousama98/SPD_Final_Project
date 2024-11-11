@@ -36,3 +36,21 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
+    function toggleFields() {
+        const listingType = document.getElementById('listing_type').value;
+        const resourceFields = document.getElementById('resource_fields');
+        const communityFields = document.getElementById('community_fields');
+
+        // Toggle fields based on dropdown selection
+        if (listingType === 'resource') {
+            resourceFields.style.display = 'block';
+            communityFields.style.display = 'none';
+        } else if (listingType === 'community') {
+            resourceFields.style.display = 'none';
+            communityFields.style.display = 'block';
+        } else {
+            resourceFields.style.display = 'none';
+            communityFields.style.display = 'none';
+        }
+    }

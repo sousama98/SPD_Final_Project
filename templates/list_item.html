@@ -1,0 +1,65 @@
+
+{% extends "base.html" %}
+
+{% block title %}List Resource or Community{% endblock %}
+
+{% block content %}
+<div class="container mt-4" style="height:36vw;">
+    <h2 class="text-center mb-4">List a Resource or Community</h2>
+
+    <form method="POST" enctype="multipart/form-data" action="{{ url_for('list_item') }}">
+        <div class="form-group mb-3">
+            <label for="listing_type">Select Type</label>
+            <select id="listing_type" name="listing_type" class="form-control" required onchange="toggleFields()">
+                <option value="">-- Select an Option --</option>
+                <option value="resource">Resource</option>
+                <option value="community">Community</option>
+            </select>
+        </div>
+
+        <!-- Resource Fields -->
+        <div id="resource_fields" style="display: none;">
+            <div class="form-group mb-3">
+                <label for="resource_title">Resource Title</label>
+                <input type="text" id="resource_title" name="resource_title" class="form-control">
+            </div>
+            <div class="form-group mb-3">
+                <label for="resource_description">Description</label>
+                <textarea id="resource_description" name="resource_description" class="form-control" rows="3"></textarea>
+            </div>
+            <div class="form-group mb-3">
+                <label for="resource_category">Category</label>
+                <input type="text" id="resource_category" name="resource_category" class="form-control">
+            </div>
+            <div class="form-group mb-3">
+                <label for="resource_images">Upload Image</label>
+                <input type="file" id="resource_images" name="resource_images" class="form-control">
+            </div>
+        </div>
+
+        <!-- Community Fields -->
+        <div id="community_fields" style="display: none;">
+            <div class="form-group mb-3">
+                <label for="community_title">Community Title</label>
+                <input type="text" id="community_title" name="community_title" class="form-control">
+            </div>
+            <div class="form-group mb-3">
+                <label for="community_description">Description</label>
+                <textarea id="community_description" name="community_description" class="form-control" rows="3"></textarea>
+            </div>
+            <div class="form-group mb-3">
+                <label for="community_location">Location</label>
+                <input type="text" id="community_location" name="community_location" class="form-control">
+            </div>
+            <div class="form-group mb-3">
+                <label for="community_images">Upload Image</label>
+                <input type="file" id="community_images" name="community_images" class="form-control">
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+
+{% endblock %}

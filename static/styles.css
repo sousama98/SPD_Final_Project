@@ -1,6 +1,6 @@
 /* General styles */
 body {
-    background-color:#fffcec ; /* Background color */
+    background-color:#fffefb ; /* Background color */
     height: 100vh;
     justify-content: center;
     align-items: center;
@@ -131,4 +131,36 @@ body {
     padding: 5px 5px;
     margin-left: 4%;
     width: 70%;
+}
+footer {
+    background-color: #343a40; /* Dark background */
+    color: white; /* Light text */
+    padding: 1rem 0; /* Spacing for footer */
+    text-align: center;
+}
+footer a {
+    color: #17a2b8; /* Bootstrap primary color for links */
+    text-decoration: none;
+}
+footer a:hover {
+    text-decoration: underline;
+}
+.messageUs{
+    font-size: medium;
+    background: #b8001f;
+    border-radius: 5px;
+    padding: 12px 10px;
+    border:none;
+    text-decoration: none;
+}
+.disabledBut{
+    font-size: medium;
+    background: lightgrey;
+    color: grey;
+    font-weight: 500;
+    border-radius: 5px;
+    padding: 6px 6px;
+    border:none;
+    text-decoration: none;
+    width:35%;
 }
