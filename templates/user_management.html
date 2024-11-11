@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}User Management{% endblock %}
+
+{% block content %}
+<div class="container mt-4" style="height:36vw">
+    <h2>User Management</h2>
+    <table class="table mt-3">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Location</th>
+                <th scope="col">Role</th>
+                <th scope="col" style="width: 12%;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td class="tdSize">{{ user['name'] }}</td>
+                <td class="tdSize">{{ user['email'] }}</td>
+                <td class="tdSize">{{ user['location'] }}</td>
+                <td class="tdSize">{{ user['role'] }}</td>
+                <td>
+                    <button type="button" class="btn btn-sm" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#editUserModal"
+                    data-user-id="{{ user['user_id'] }}"
+                    data-user-name="{{ user['name'] }}"
+                    data-user-email="{{ user['email'] }}"
+                    data-user-location="{{ user['location'] }}"
+                    data-user-role="{{ user['role'] }}"
+                    data-profile-image="{{ user['profile_image'] }}">
+                    <img style="width: 55%;" src="{{ url_for('static', filename='images/edit.png') }}" alt="Description of Image">
+            </button>
+                    <!-- Delete button -->
+                    <a href="{{ url_for('delete_user', user_id=user['user_id']) }}" class="btn btn-sm" onclick="return confirm('Are you sure you want to delete this user?');"><img  style="width: 2rem;" src="{{ url_for('static', filename='images/delete.png') }}" alt="Description of Image"></a>
+                    
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="editUserForm" action="{{ url_for('edit_user') }}" method="POST" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Hidden user ID field -->
+                    <input type="hidden" name="user_id" id="user_id">
+              
+                    
+                    <!-- Name Field -->
+                    <div class="mb-3">
+                        <label for="name" style="width: 4rem;" class="form-label">Name</label>
+                        <input type="text" class="form-ter" id="name" name="name" required>
+                    </div>
+
+                    <!-- Email Field -->
+                    <div class="mb-3">
+                        <label for="email" style="width: 4rem;" class="form-label">Email</label>
+                        <input type="email" class="form-ter" id="email" name="email" required>
+                    </div>
+
+                    <!-- Location Field -->
+                    <div class="mb-3">
+                        <label for="location" style="width: 4rem;" class="form-label">Location</label>
+                        <input type="text" class="form-ter" id="location" name="location">
+                    </div>
+
+                    <!-- Role Dropdown -->
+                    <div class="mb-3">
+                        <label for="role" style="width: 4rem;" class="form-label">Role</label>
+                        <select id="role" class="form-ter" name="role">
+                            <option value="Admin">Admin</option>
+                            <option value="Customer">Customer</option>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="buttonUs">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

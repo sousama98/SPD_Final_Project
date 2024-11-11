@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}My Messages{% endblock %}
+
+{% block content %}
+<div class="container mt-4" style="height:36vw">
+    <h2 class="text-center mb-4">My Messages</h2>
+
+    {% if messages %}
+    <div class="list-group">
+        {% for message in messages %}
+        <div class="list-group-item">
+            <h5 class="mb-1">From: {{ message['sender_name'] }} ({{ message['sender_email'] }})</h5>
+            {% if message['resource_title'] %}
+            <p class="mb-1"><strong>Regarding Resource:</strong> {{ message['resource_title'] }}</p>
+            {% endif %}
+            <p class="mb-1">{{ message['content'] }}</p>
+            <small class="text-muted">Received on: {{ message['timestamp'] }}</small>
+
+            <!-- Reply Button -->
+            <button class="btn btn-primary btn-sm mt-2" data-bs-toggle="modal" data-bs-target="#replyModal{{ message['message_id'] }}">Reply</button>
+
+            <!-- Reply Modal -->
+            <div class="modal fade" id="replyModal{{ message['message_id'] }}" tabindex="-1" aria-labelledby="replyModalLabel{{ message['message_id'] }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="replyModalLabel{{ message['message_id'] }}">Reply to {{ message['sender_name'] }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form method="POST" action="{{ url_for('reply_message', message_id=message['message_id']) }}">
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <textarea name="reply_content" class="form-control" rows="5" placeholder="Type your reply..." required></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Send Reply</button>
+                            </div>
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-center">You have no messages.</p>
+    {% endif %}
+</div>
+{% endblock %}

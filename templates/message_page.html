@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Message Owner{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Message the Owner</h2>
+
+    <div class="card">
+        <div class="card-header">
+            {% if resource_title %}
+                Send a message regarding the resource: "{{ resource_title }}"
+            {% elif community_title %}
+                Send a message regarding the community event: "{{ community_title }}"
+            {% endif %}
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                <div class="form-group mb-3">
+                    <label for="message">Your Message</label>
+                    <textarea id="message" name="message" class="form-control" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Send Message</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
