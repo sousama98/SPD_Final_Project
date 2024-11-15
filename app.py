@@ -142,7 +142,7 @@ def customer_dashboard():
 
     # Reserved Resources
     reserved_resources_query = '''
-    SELECT title, description, category, date_posted
+    SELECT resource_id,title, description, category, date_posted
     FROM Resources
     WHERE user_id = ? AND availability = 'Reserved';
     '''
@@ -150,7 +150,7 @@ def customer_dashboard():
 
     # Reserved Communities
     reserved_communities_query = '''
-    SELECT title, description, location, date_posted
+    SELECT community_id,title, description, location, date_posted
     FROM Community
     WHERE user_id = ? AND availability = 'Reserved';
     '''
@@ -252,14 +252,6 @@ def community_events():
     )
 
 
-
-
-
-# @app.route('/customer_messages')
-# @login_required
-# def customer_messages():
-#     # Logic to fetch and display messages from customers
-#     return render_template('customer_messages.html')
 
 @app.route('/notifications')
 @login_required
@@ -421,6 +413,7 @@ def reserve_resource(resource_id):
             SET availability = 'Reserved'
             WHERE resource_id = ?;
             '''
+
             conn.execute(reserve_query, (resource_id,))
 
             # Notify the owner
@@ -441,7 +434,87 @@ def reserve_resource(resource_id):
     conn.close()
     return redirect(url_for('products_listed'))
 
+@app.route('/unreserve/<int:resource_id>', methods=['POST'])
+@login_required
+def unreserve_resource(resource_id):
+    conn = get_db_connection()
+    user_id = session['user_id']  # The user performing the unreserve action
 
+    # Get the resource and check availability
+    resource_query = '''
+    SELECT user_id, title, availability
+    FROM Resources
+    WHERE resource_id = ? AND availability = 'Reserved';
+    '''
+    resource = conn.execute(resource_query, (resource_id,)).fetchone()
+
+    if resource:
+        # Update the resource to mark it as available
+        unreserve_query = '''
+        UPDATE Resources
+        SET availability = 'Available'
+        WHERE resource_id = ? AND availability = 'Reserved';
+        '''
+        
+        conn.execute(unreserve_query, (resource_id,))
+
+        # Notify the owner
+        notification_content = f"Your resource '{resource['title']}' has been unreserved."
+        notification_query = '''
+        INSERT INTO Notifications (user_id, content)
+        VALUES (?, ?);
+        '''
+        conn.execute(notification_query, (resource['user_id'], notification_content))
+
+        conn.commit()
+        flash("Resource unreserved successfully!", "success")
+    else:
+        flash("Resource is not reserved or doesn't exist.", "danger")
+
+    conn.close()
+    return redirect(url_for('customer_dashboard'))
+
+@app.route('/unreserve_community/<int:community_id>', methods=['POST'])
+@login_required
+def unreserve_community(community_id):
+    conn = get_db_connection()
+    user_id = session['user_id']  # Current user
+
+    # Check if the community exists and is reserved
+    community_query = '''
+    SELECT user_id, title, availability
+    FROM Community
+    WHERE community_id = ?;
+    '''
+    community = conn.execute(community_query, (community_id,)).fetchone()
+
+    if community:
+        if community['availability'] == 'Reserved':
+            # Update the community to mark it as available
+            unreserve_query = '''
+            UPDATE Community
+            SET availability = 'Available'
+            WHERE community_id = ?;
+            '''
+            conn.execute(unreserve_query, (community_id,))
+
+            # Notify the owner
+            notification_content = f"Your community '{community['title']}' is now available again."
+            notification_query = '''
+            INSERT INTO Notifications (user_id, content)
+            VALUES (?, ?);
+            '''
+            conn.execute(notification_query, (community['user_id'], notification_content))
+
+            conn.commit()
+            flash("Community unreserved successfully!", "success")
+        else:
+            flash("Community is already available.", "danger")
+    else:
+        flash("Community not found.", "danger")
+
+    conn.close()
+    return redirect(url_for('customer_dashboard'))
 
 @app.route('/message/<int:resource_id>', methods=['GET', 'POST'])
 @login_required

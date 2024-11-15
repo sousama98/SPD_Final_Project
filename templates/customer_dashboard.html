@@ -58,30 +58,35 @@
     </div>
 
     <div class="row mt-4">
-        <!-- Reserved Resources -->
-        <div class="col-md-6 mb-4">
-            <div class="card">
-                <div class="card-header buttonUs">
-                    Reserved Resources
+            <!-- Reserved Resources -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header buttonUs">
+                        Reserved Resources
+                    </div>
+                    <div class="card-body">
+                        {% if reserved_resources %}
+                        <ul class="list-group list-group-flush">
+                            {% for resource in reserved_resources %}
+                            <li class="list-group-item">
+                                <h5>{{ resource['title'] }}</h5>
+                                <p>{{ resource['description'] }}</p>
+                                <small class="text-muted">Category: {{ resource['category'] }}</small><br>
+                                <small class="text-muted">Reserved on: {{ resource['date_posted'] }}</small>
+                                
+                                <!-- Unreserve Button -->
+                                <form method="POST" action="{{ url_for('unreserve_resource', resource_id=resource['resource_id']) }}" style="margin-top: 10px;">
+                                    <button type="submit" class="btn btn-danger btn-sm">Unreserve</button>
+                                </form>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p>No reserved resources yet.</p>
+                        {% endif %}
+                    </div>
                 </div>
-                <div class="card-body">
-                    {% if reserved_resources %}
-                    <ul class="list-group list-group-flush">
-                        {% for resource in reserved_resources %}
-                        <li class="list-group-item">
-                            <h5>{{ resource['title'] }}</h5>
-                            <p>{{ resource['description'] }}</p>
-                            <small class="text-muted">Category: {{ resource['category'] }}</small><br>
-                            <small class="text-muted">Reserved on: {{ resource['date_posted'] }}</small>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                    {% else %}
-                    <p>No reserved resources yet.</p>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
+            </div>  
 
         <!-- Reserved Communities -->
         <div class="col-md-6 mb-4">
@@ -98,6 +103,11 @@
                             <p>{{ community['description'] }}</p>
                             <small><strong>Location:</strong> {{ community['location'] }}</small><br>
                             <small class="text-muted">Reserved on: {{ community['date_posted'] }}</small>
+                            
+                            <!-- Unreserve Button -->
+                            <form method="POST" action="{{ url_for('unreserve_community', community_id=community['community_id']) }}" style="margin-top: 10px;">
+                                <button type="submit" class="btn btn-danger btn-sm">Unreserve</button>
+                            </form>
                         </li>
                         {% endfor %}
                     </ul>
@@ -107,6 +117,7 @@
                 </div>
             </div>
         </div>
+        
     </div>
 </div>
 {% endblock %}
