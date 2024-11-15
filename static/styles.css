@@ -1,11 +1,17 @@
 /* General styles */
 body {
     background-color:#fffefb ; /* Background color */
-    height: 100vh;
+    height: 100%;
     justify-content: center;
     align-items: center;
     margin: 0;
 }
+
+.container {
+    min-height: calc(100vh - 100px); /* Adjust based on header/footer height */
+    padding-bottom: 20px;
+}
+
 
 /* Container for the login page */
 .login-container {
@@ -137,6 +143,8 @@ footer {
     color: white; /* Light text */
     padding: 1rem 0; /* Spacing for footer */
     text-align: center;
+    margin-top: auto;
+    padding: 10px 0;
 }
 footer a {
     color: #17a2b8; /* Bootstrap primary color for links */
